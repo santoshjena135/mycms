@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Creator</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPageModal">
+        Add Page
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createPageModal" tabindex="-1" role="dialog" aria-labelledby="createPageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPageModalLabel">Create New Page</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createPageForm">
+                    <div class="form-group">
+                        <label for="pagename">Page Name</label>
+                        <input type="text" class="form-control" id="pagename" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="path">Path</label>
+                        <input type="text" class="form-control" id="path" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="templateName">Template Name</label>
+                        <input type="text" class="form-control" id="templateName" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Page</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    $('#createPageForm').on('submit', function(event){
+        event.preventDefault();
+        
+        const pagename = $('#pagename').val();
+        const path = $('#path').val();
+        const templateName = $('#templateName').val();
+        
+        $.ajax({
+            url: '/createpage',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ fname: pagename, dirPath: path, templateName: templateName }),
+            success: function(response) {
+                alert('Page created successfully');
+                $('#createPageModal').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                alert('Error creating page: ' + xhr.responseJSON.message);
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
